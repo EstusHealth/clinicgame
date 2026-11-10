@@ -1,0 +1,694 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>Clinic Lever Frame</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=IBM+Plex+Mono:wght@500;600&display=swap">
+<style>
+/* Layout: a sticky instrument strip up top, then a signal-box lever frame.
+   Seven painted banks of levers and switches, one bank per stage of the clinic pipeline. */
+:root{
+  --wall:#e6e7df; --plate:#d5d9cd; --recess:#c2c8b9; --edge:#9da594; --ink:#1a201c; --ink2:#4a544d;
+  --brass:#b3913a; --brass-ink:#231b05;
+  --window:#151916; --window-ink:#f1ebd5; --window-dim:#a3a996; --window-red:#ff7059;
+  --red:#cc3520; --amber:#d99212; --green:#2c8f51; --pilot:#f5b82e; --lamp-off:#7d847c;
+  --steel-a:#f3f5f0; --steel-b:#9aa198; --steel-c:#5d645d;
+  --shadow:rgba(28,38,30,.28); --hl:rgba(255,255,255,.6);
+  --h-leads:#2a5fae; --h-intake:#e0ac1c; --h-capacity:#c0392b; --h-delivery:#2a2e2b;
+  --h-yield:#2f8a57; --h-cash:#f0ede1; --h-people:#8a5a3a;
+  --font-d:"Barlow Condensed","Arial Narrow",sans-serif;
+  --font-b:"Barlow",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-m:"IBM Plex Mono",ui-monospace,Menlo,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --wall:#131613; --plate:#222724; --recess:#191d1a; --edge:#3b433d; --ink:#e9eae1; --ink2:#9da69e;
+    --brass:#c7a44c; --brass-ink:#1b1604;
+    --window:#0a0c0a; --window-ink:#f1ebd5; --window-dim:#8f957f; --window-red:#ff7059;
+    --red:#ff5a40; --amber:#ffbe3b; --green:#4fd07f; --pilot:#ffd166; --lamp-off:#4c534d;
+    --steel-a:#e1e5de; --steel-b:#8d948b; --steel-c:#474d48;
+    --shadow:rgba(0,0,0,.55); --hl:rgba(255,255,255,.07);
+    --h-delivery:#5a615c;
+    color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+  --wall:#131613; --plate:#222724; --recess:#191d1a; --edge:#3b433d; --ink:#e9eae1; --ink2:#9da69e;
+  --brass:#c7a44c; --brass-ink:#1b1604;
+  --window:#0a0c0a; --window-ink:#f1ebd5; --window-dim:#8f957f; --window-red:#ff7059;
+  --red:#ff5a40; --amber:#ffbe3b; --green:#4fd07f; --pilot:#ffd166; --lamp-off:#4c534d;
+  --steel-a:#e1e5de; --steel-b:#8d948b; --steel-c:#474d48;
+  --shadow:rgba(0,0,0,.55); --hl:rgba(255,255,255,.07);
+  --h-delivery:#5a615c;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--wall);color:var(--ink);font:400 15px/1.45 var(--font-b);-webkit-text-size-adjust:100%}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--wall)}
+.wrap{max-width:1120px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+h1,h2,h3,p{margin:0}
+button{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+.lab{font:600 11px/1.2 var(--font-d);letter-spacing:.12em;text-transform:uppercase;color:var(--ink2)}
+.plate{display:inline-block;flex:none;min-width:24px;text-align:center;font:600 11px/1 var(--font-m);padding:3px 4px;border-radius:3px;background:var(--brass);color:var(--brass-ink);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 1px 0 var(--shadow)}
+.win{display:inline-block;background:var(--window);color:var(--window-ink);font:600 15px/1.2 var(--font-m);font-variant-numeric:tabular-nums;padding:6px 9px;border-radius:4px;box-shadow:inset 0 2px 5px rgba(0,0,0,.7),0 1px 0 var(--hl);white-space:nowrap}
+.win.neg{color:var(--window-red)}
+.lamp{display:inline-block;flex:none;width:12px;height:12px;border-radius:50%;background:var(--lamp-off);box-shadow:inset 0 1px 2px rgba(0,0,0,.45),0 0 0 2px var(--recess),0 0 0 3px var(--edge)}
+.lamp[data-s="green"]{background:radial-gradient(circle at 35% 30%,#fff8,transparent 45%),var(--green);box-shadow:0 0 6px var(--green),0 0 0 2px var(--recess),0 0 0 3px var(--edge)}
+.lamp[data-s="amber"]{background:radial-gradient(circle at 35% 30%,#fff8,transparent 45%),var(--amber);box-shadow:0 0 7px var(--amber),0 0 0 2px var(--recess),0 0 0 3px var(--edge)}
+.lamp[data-s="red"]{background:radial-gradient(circle at 35% 30%,#fff9,transparent 45%),var(--red);box-shadow:0 0 10px var(--red),0 0 0 2px var(--recess),0 0 0 3px var(--edge);animation:pulse 1.1s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 3px var(--red),0 0 0 2px var(--recess),0 0 0 3px var(--edge);filter:brightness(.8)}}
+
+/* masthead */
+.mast{padding-block:22px 14px;display:flex;flex-direction:column;gap:6px}
+.mast h1{font:700 clamp(34px,9vw,54px)/.95 var(--font-d);letter-spacing:.01em;text-transform:uppercase;text-wrap:balance}
+.mast .lede{max-width:60ch;color:var(--ink2)}
+
+/* sticky instrument strip */
+.strip{position:sticky;top:env(safe-area-inset-top,0px);z-index:6;background:var(--plate);border-block:1px solid var(--edge);box-shadow:0 4px 10px -6px var(--shadow)}
+.strip-in{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 16px;align-items:center;padding-block:8px}
+.strip-cell{display:flex;flex-direction:column;gap:3px;min-width:0}
+.win.big{font-size:24px;padding:5px 10px}
+.stuck-v{display:flex;align-items:center;gap:9px;font:700 22px/1 var(--font-d);text-transform:uppercase;letter-spacing:.03em;padding-left:3px}
+.vs{font:500 12px/1.2 var(--font-m);color:var(--ink2);font-variant-numeric:tabular-nums}
+.last{grid-column:1/-1;font-size:13px;line-height:1.3;color:var(--ink2);min-height:17px}
+.last b{color:var(--ink);font-weight:600}
+
+/* top diagnostics */
+.main{padding-block:16px 40px;display:flex;flex-direction:column;gap:16px}
+.top{display:grid;gap:16px}
+.col{display:flex;flex-direction:column;gap:16px;min-width:0}
+.panel{background:var(--plate);border:1px solid var(--edge);border-radius:6px;box-shadow:inset 0 1px 0 var(--hl),0 2px 0 var(--edge);padding:14px;min-width:0}
+.diag{display:flex;flex-direction:column;gap:10px}
+.diag h2{font:700 26px/1.02 var(--font-d);text-transform:uppercase;letter-spacing:.01em;text-wrap:balance}
+.diag p{color:var(--ink2)}
+.bal{display:flex;flex-direction:column;gap:7px;margin-top:2px}
+.bal-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:baseline}
+.bal-row .lab{color:var(--ink)}
+.bal-row .num{font:600 13px/1 var(--font-m);font-variant-numeric:tabular-nums}
+.bal-track{grid-column:1/-1;height:12px;border-radius:3px;background:var(--recess);box-shadow:inset 0 1px 3px var(--shadow);overflow:hidden}
+.bal-fill{display:block;height:100%;width:0;border-radius:3px;transition:width .35s ease}
+#bal-d{background:var(--h-leads)} #bal-s{background:var(--h-capacity)}
+
+.rail{display:flex;flex-direction:column;padding:6px 14px}
+.rail-row{display:grid;grid-template-columns:14px 26px minmax(0,1fr) auto;gap:10px;align-items:center;min-height:42px;padding:6px 0;background:none;border:0;border-top:1px solid var(--edge);text-align:left;cursor:pointer;width:100%}
+.rail-row:first-child{border-top:0}
+.rail-name{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font:600 17px/1 var(--font-d);text-transform:uppercase;letter-spacing:.04em;min-width:0}
+.rail-tag{font:600 10px/1 var(--font-d);letter-spacing:.1em;padding:3px 5px;border-radius:2px;border:1px solid currentColor}
+.rail-row[data-s="green"] .rail-tag{display:none}
+.rail-row[data-s="red"] .rail-tag{background:var(--ink);color:var(--plate);border-color:var(--ink)}
+.rail-metric{font:500 12px/1.2 var(--font-m);font-variant-numeric:tabular-nums;color:var(--ink2);text-align:right}
+.rail-note{font-size:12.5px;color:var(--ink2);padding:8px 0 6px;border-top:1px solid var(--edge)}
+
+.next{display:flex;flex-direction:column;gap:8px}
+.next-head{display:flex;justify-content:space-between;align-items:center;gap:10px}
+.next h2,.tiles-h{font:700 19px/1 var(--font-d);text-transform:uppercase;letter-spacing:.04em}
+.next-list{display:flex;flex-direction:column}
+.next-item{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:9px 0;min-height:44px;background:none;border:0;border-top:1px solid var(--edge);text-align:left;cursor:pointer;width:100%}
+.next-item .what{min-width:0;font-weight:600;line-height:1.2}
+.next-item .what small{display:block;font-weight:400;font-size:12.5px;color:var(--ink2)}
+.next-item .gain{font:600 13px/1 var(--font-m);font-variant-numeric:tabular-nums;white-space:nowrap}
+.next-empty{color:var(--ink2);padding:8px 0;border-top:1px solid var(--edge)}
+.btn{background:var(--recess);border:1px solid var(--edge);border-radius:4px;padding:7px 11px;min-height:34px;font:600 13px/1 var(--font-d);letter-spacing:.08em;text-transform:uppercase;cursor:pointer;box-shadow:inset 0 1px 0 var(--hl),0 1px 0 var(--edge)}
+.btn:active{transform:translateY(1px);box-shadow:none}
+.btn[aria-pressed="true"]{background:var(--brass);color:var(--brass-ink);border-color:var(--brass)}
+
+.tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px 14px}
+.tile{display:flex;flex-direction:column;gap:4px;min-width:0}
+.tile .win{align-self:flex-start;max-width:100%}
+
+/* your numbers */
+.base summary{cursor:pointer;font:700 17px/1.2 var(--font-d);text-transform:uppercase;letter-spacing:.05em;list-style-position:inside}
+.base p{color:var(--ink2);font-size:13.5px;margin-top:8px}
+.base-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-top:12px}
+.base-grid label{display:flex;flex-direction:column;gap:4px;min-width:0}
+.base-grid input{width:100%;min-width:0;font:600 16px/1.2 var(--font-m);padding:8px 9px;border-radius:4px;border:1px solid var(--edge);background:var(--window);color:var(--window-ink)}
+
+/* banks */
+.hint{font-size:13.5px;color:var(--ink2)}
+.bank{scroll-margin-top:calc(118px + env(safe-area-inset-top,0px));padding:0;overflow:hidden;
+  background-image:radial-gradient(circle at 9px 9px,var(--steel-b) 0 2.5px,transparent 3px),radial-gradient(circle at calc(100% - 9px) 9px,var(--steel-b) 0 2.5px,transparent 3px);background-color:var(--plate)}
+.bank-head{display:grid;grid-template-columns:auto minmax(0,1fr);gap:4px 12px;align-items:center;padding:14px 20px 12px;border-bottom:1px solid var(--edge)}
+.bank-num{grid-row:span 2;width:42px;height:42px;border-radius:50%;display:grid;place-items:center;background:linear-gradient(135deg,rgba(255,255,255,.3),transparent 45%,rgba(0,0,0,.22)),var(--paint);color:var(--paint-ink);font:700 22px/1 var(--font-d);box-shadow:0 1px 3px var(--shadow),inset 0 0 0 1px rgba(0,0,0,.25)}
+.bank-title{display:flex;align-items:baseline;gap:4px 10px;flex-wrap:wrap;min-width:0}
+.bank-title h2{font:700 26px/1 var(--font-d);text-transform:uppercase;letter-spacing:.03em}
+.bank-title p{color:var(--ink2);font-size:13.5px}
+.bank-stat{display:flex;align-items:center;gap:9px;padding-left:3px;min-width:0}
+.bank-metric{font:500 12px/1.2 var(--font-m);font-variant-numeric:tabular-nums;color:var(--ink2)}
+.ctls{display:grid;grid-template-columns:minmax(0,1fr)}
+.ctl{display:flex;gap:12px;align-items:flex-start;padding:14px;border:0;border-top:1px solid var(--edge);background:none;text-align:left;min-width:0;width:100%;position:relative}
+.ctls>.ctl:first-child{border-top:0}
+.ctl.flash{animation:flash 1.3s ease-out}
+@keyframes flash{0%,60%{background:color-mix(in srgb,var(--brass) 28%,transparent)}100%{background:transparent}}
+.ctl-body{display:flex;flex-direction:column;gap:5px;min-width:0;flex:1}
+.ctl-head{display:flex;align-items:center;gap:8px;min-width:0}
+.ctl-name{font:600 19px/1.05 var(--font-d);letter-spacing:.02em;text-transform:uppercase;min-width:0}
+.ctl-desc{font-size:13.5px;line-height:1.35;color:var(--ink2)}
+.ctl-fx{display:flex;flex-wrap:wrap;gap:2px 12px;font:500 12px/1.3 var(--font-m);font-variant-numeric:tabular-nums}
+.ctl-fx .cost{color:var(--ink2)}
+
+/* the lever */
+.lv{position:relative;flex:none;width:124px;height:112px;touch-action:pan-y;cursor:grab;border-radius:8px;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+.lv:active{cursor:grabbing}
+.lv-quad{position:absolute;left:14px;right:14px;bottom:8px;height:58px;border-radius:48px 48px 8px 8px;background:var(--recess);border:1px solid var(--edge);box-shadow:inset 0 3px 6px var(--shadow)}
+.lv-tick{position:absolute;left:50%;bottom:14px;width:2px;height:62px;margin-left:-1px;transform-origin:50% 100%;transform:rotate(var(--a));pointer-events:none}
+.lv-tick::before{content:"";position:absolute;top:0;left:-1px;width:4px;height:9px;border-radius:1px;background:var(--ink2)}
+.lv-arm{position:absolute;left:50%;bottom:14px;width:8px;height:80px;margin-left:-4px;border-radius:4px;transform-origin:50% 100%;transform:rotate(var(--a));transition:transform .3s cubic-bezier(.3,1.6,.5,1);background:linear-gradient(90deg,var(--steel-c),var(--steel-a) 40%,var(--steel-b) 72%,var(--steel-c));box-shadow:1px 2px 3px var(--shadow)}
+.lv.dragging .lv-arm{transition:none}
+.lv-grip{position:absolute;left:50%;top:-10px;width:24px;height:38px;margin-left:-12px;border-radius:12px 12px 9px 9px;background:linear-gradient(90deg,rgba(255,255,255,.38),rgba(255,255,255,0) 38%,rgba(0,0,0,.28)),var(--paint);box-shadow:0 2px 5px var(--shadow),inset 0 0 0 1px rgba(0,0,0,.28)}
+.lv-pivot{position:absolute;left:50%;bottom:3px;width:22px;height:22px;margin-left:-11px;border-radius:50%;background:radial-gradient(circle at 35% 30%,var(--steel-a),var(--steel-c) 72%);border:1px solid var(--edge);box-shadow:0 1px 2px var(--shadow)}
+.pos-row{display:flex;flex-wrap:wrap;gap:6px}
+.pos{flex:1 1 calc(50% - 3px);min-width:0;min-height:34px;padding:6px 6px;border-radius:4px;border:1px solid var(--edge);background:var(--recess);font:600 13px/1.1 var(--font-d);letter-spacing:.05em;text-transform:uppercase;cursor:pointer;box-shadow:inset 0 1px 2px var(--shadow)}
+.pos[aria-pressed="true"]{background:var(--brass);color:var(--brass-ink);border-color:var(--brass);box-shadow:inset 0 1px 0 rgba(255,255,255,.35),0 1px 0 var(--shadow)}
+
+/* the switch */
+.ctl.switch{cursor:pointer;align-items:center;-webkit-tap-highlight-color:transparent}
+.sw{position:relative;flex:none;width:52px;height:78px}
+.sw-lamp{position:absolute;top:0;left:50%;width:10px;height:10px;margin-left:-5px;border-radius:50%;background:var(--lamp-off);box-shadow:inset 0 1px 2px rgba(0,0,0,.45),0 0 0 2px var(--recess),0 0 0 3px var(--edge);transition:background .15s,box-shadow .15s}
+.sw-nut{position:absolute;left:50%;top:46px;width:32px;height:32px;margin:-16px 0 0 -16px;border-radius:50%;background:conic-gradient(var(--steel-a),var(--steel-b),var(--steel-a),var(--steel-c),var(--steel-a),var(--steel-b),var(--steel-a));border:1px solid var(--edge);box-shadow:0 1px 3px var(--shadow)}
+.sw-nut::after{content:"";position:absolute;inset:8px;border-radius:50%;background:var(--window);box-shadow:inset 0 1px 3px #000}
+.sw-bat{position:absolute;left:50%;top:46px;width:10px;height:26px;margin-left:-5px;border-radius:3px 3px 5px 5px;transform-origin:50% 0;transform:scaleY(1);transition:transform .2s cubic-bezier(.5,0,.3,1.5);background:linear-gradient(90deg,var(--steel-c),var(--steel-a) 42%,var(--steel-b) 75%,var(--steel-c));box-shadow:1px 2px 3px var(--shadow)}
+.sw-bat::after{content:"";position:absolute;left:50%;bottom:-5px;width:16px;height:16px;margin-left:-8px;border-radius:50%;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.45),transparent 50%),var(--paint);box-shadow:inset 0 0 0 1px rgba(0,0,0,.28)}
+.switch[aria-checked="true"] .sw-bat{transform:scaleY(-1)}
+.switch[aria-checked="true"] .sw-lamp{background:radial-gradient(circle at 35% 30%,#fffa,transparent 45%),var(--pilot);box-shadow:0 0 9px var(--pilot),0 0 0 2px var(--recess),0 0 0 3px var(--edge)}
+.sw-state{font:600 10px/1 var(--font-d);letter-spacing:.12em;padding:3px 5px;border-radius:2px;border:1px solid var(--edge);color:var(--ink2);margin-left:auto;flex:none}
+.switch[aria-checked="true"] .sw-state{background:var(--ink);color:var(--plate);border-color:var(--ink)}
+
+.bank[data-stage="leads"]{--paint:var(--h-leads);--paint-ink:#fff}
+.bank[data-stage="intake"]{--paint:var(--h-intake);--paint-ink:#231b05}
+.bank[data-stage="capacity"]{--paint:var(--h-capacity);--paint-ink:#fff}
+.bank[data-stage="delivery"]{--paint:var(--h-delivery);--paint-ink:#fff}
+.bank[data-stage="yield"]{--paint:var(--h-yield);--paint-ink:#fff}
+.bank[data-stage="cash"]{--paint:var(--h-cash);--paint-ink:#231b05}
+.bank[data-stage="people"]{--paint:var(--h-people);--paint-ink:#fff}
+
+.foot{font-size:13px;color:var(--ink2);max-width:70ch}
+
+@media (min-width:700px){
+  .ctls{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .ctls>.ctl:nth-child(2){border-top:0}
+  .ctls>.ctl:nth-child(odd){border-right:1px solid var(--edge)}
+  .tiles{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .base-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .strip-in{grid-template-columns:auto auto minmax(0,1fr);gap:4px 28px}
+  .last{grid-column:auto;align-self:end;text-align:right}
+}
+@media (min-width:940px){
+  .top{grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:start}
+}
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important}
+}
+</style>
+
+<div class="wrap">
+  <header class="mast">
+    <p class="lab">Allied health clinic control room</p>
+    <h1>Clinic Lever Frame</h1>
+    <p class="lede">Pull a lever. Watch the money move. The red lamp shows where the clinic is stuck, so you stop pulling levers that do nothing.</p>
+  </header>
+</div>
+
+<div class="strip">
+  <div class="wrap strip-in">
+    <div class="strip-cell">
+      <span class="lab">Profit / month</span>
+      <span class="win big" id="r-profit">$0</span>
+    </div>
+    <div class="strip-cell">
+      <span class="lab">Stuck at</span>
+      <span class="stuck-v"><i class="lamp" data-s="red"></i><span id="r-stuck">Delivery</span></span>
+      <span class="vs" id="r-vs">$0 vs start</span>
+    </div>
+    <p class="last" id="r-last" aria-live="polite">Nothing pulled yet.</p>
+  </div>
+</div>
+
+<main class="wrap main">
+  <section class="top" aria-label="Diagnosis">
+    <div class="col">
+      <div class="panel diag">
+        <span class="lab">The bottleneck</span>
+        <h2 id="d-head">Reading the dials</h2>
+        <p id="d-why"></p>
+        <div class="bal">
+          <div class="bal-row"><span class="lab">Hours clients want</span><span class="num" id="bal-dn">0 h / mo</span><span class="bal-track"><i class="bal-fill" id="bal-d"></i></span></div>
+          <div class="bal-row"><span class="lab">Hours the clinic can deliver</span><span class="num" id="bal-sn">0 h / mo</span><span class="bal-track"><i class="bal-fill" id="bal-s"></i></span></div>
+        </div>
+      </div>
+      <div class="panel rail" id="rail" aria-label="Pipeline stages"></div>
+    </div>
+    <div class="col">
+      <div class="panel next">
+        <div class="next-head">
+          <h2>Pull these next</h2>
+          <span style="display:flex;gap:8px">
+            <button class="btn" id="b-sound" type="button" aria-pressed="false">Clunk</button>
+            <button class="btn" id="b-reset" type="button">Reset</button>
+          </span>
+        </div>
+        <div class="next-list" id="next"></div>
+      </div>
+      <div class="panel">
+        <div class="tiles">
+          <div class="tile"><span class="lab">Revenue / month</span><span class="win" id="t-rev">$0</span></div>
+          <div class="tile"><span class="lab">Profit / year</span><span class="win" id="t-year">$0</span></div>
+          <div class="tile"><span class="lab">Margin</span><span class="win" id="t-margin">0%</span></div>
+          <div class="tile"><span class="lab">Clients waiting</span><span class="win" id="t-wait">0</span></div>
+          <div class="tile"><span class="lab">Empty paid hours / mo</span><span class="win" id="t-idle">0</span></div>
+          <div class="tile"><span class="lab">Cash stuck in debtors</span><span class="win" id="t-debt">$0</span></div>
+        </div>
+      </div>
+      <details class="panel base">
+        <summary>Set your clinic's numbers</summary>
+        <p>These start as example figures. Change them to match your clinic and every dial updates.</p>
+        <div class="base-grid">
+          <label><span class="lab">Clinicians (FTE)</span><input id="b-fte" type="number" inputmode="decimal" min="1" max="40" step="0.5"></label>
+          <label><span class="lab">Average rate $ / h</span><input id="b-rate" type="number" inputmode="decimal" min="60" max="400" step="1"></label>
+          <label><span class="lab">Enquiries / month</span><input id="b-enq" type="number" inputmode="decimal" min="0" max="500" step="1"></label>
+          <label><span class="lab">Clinician cost $ / year</span><input id="b-wage" type="number" inputmode="decimal" min="40000" max="250000" step="1000"></label>
+        </div>
+      </details>
+    </div>
+  </section>
+
+  <p class="hint">Tap a lever to pull it one notch. Drag it, or tap a notch label, to jump. Flick a switch to turn it on.</p>
+  <div id="banks" style="display:flex;flex-direction:column;gap:16px"></div>
+
+  <p class="foot">This is an example model. The effects are rules of thumb that show how the stages push on each other. Put your own numbers in and read the dollars as a guide to direction. Steady state only: it shows where things settle, and skips the months it takes to get there.</p>
+</main>
+
+<script>
+(() => {
+'use strict';
+/*MODEL*/
+const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
+const FLAT = {reviews:100, seo:600, niche:300, online:250, agreement:80, sms:120, backfill:150, adminSupport:1800,
+  groups:300, assess:400, claims:200, budget:150, dd:150, chase:200};
+const DEFAULTS = {ads:0, referrers:0, reviews:false, seo:false, niche:false,
+  speed:0, intakeHours:0, online:false, agreement:false,
+  hire:0, ta:0, target:1, contractors:false,
+  cancelPolicy:false, sms:false, backfill:false, cluster:false, aiNotes:false, adminSupport:false, telehealth:0,
+  nf2f:false, travel:false, fees:1, groups:false, assess:false,
+  invoice:0, claims:false, budget:false, dd:false, chase:false,
+  goal:false, rebook:false, supervision:0, ladder:false, protect:false};
+const BASE0 = {fte:5, rate:190, enq:30, wage:110000};
+const HOURS_PER_CLIENT = 4.5;
+
+function ctlCost(id, s, b){
+  const fte = b.fte + s.hire;
+  switch (id){
+    case 'ads': return [0,1500,4000,8000][s.ads];
+    case 'referrers': return [0,300,900,1800][s.referrers];
+    case 'speed': return [0,400,1200][s.speed];
+    case 'intakeHours': return [0,2200,4600][s.intakeHours];
+    case 'hire': return s.hire * (b.wage/12 + 600 + 400);
+    case 'ta': return s.ta * 5200;
+    case 'invoice': return [0,150,300][s.invoice];
+    case 'supervision': return [0,220,480][s.supervision] * fte;
+    case 'aiNotes': return s.aiNotes ? 90 * fte : 0;
+    case 'ladder': return s.ladder ? fte * b.wage/12 * .03 : 0;
+    default: return s[id] === true ? (FLAT[id] || 0) : 0;
+  }
+}
+
+function compute(s, b){
+  const on = k => s[k] ? 1 : 0;
+  // 1 leads
+  let D = b.enq + [0,7,15,24][s.ads] + [0,4,10,16][s.referrers];
+  D *= 1 + .10*on('reviews') + .12*on('seo') + .10*on('niche');
+  // 2 intake
+  const c = clamp(.42 + [0,.08,.15][s.speed] + .05*on('online') + .04*on('agreement') + .04*on('niche') + [.02,0,-.02,-.05][s.fees], .1, .85);
+  const cap = [12,20,32][s.intakeHours] + 5*on('online');
+  const wanted = D * c;
+  const N = Math.min(wanted, cap);
+  // 7 retention, client side
+  const L = 9 * (1 + .12*on('goal') + .06*on('rebook') + .05*on('budget') - .03*on('cancelPolicy')) * [1.02,1,.98,.95][s.fees];
+  const Hd = N * L * HOURS_PER_CLIENT;
+  // 7 retention, staff side
+  const t = clamp(.28 + [-.03,0,.05,.14][s.target] - [0,.06,.11][s.supervision] - .05*on('ladder') - .04*on('protect'), .06, .6);
+  // 3 capacity
+  const fte = b.fte + s.hire;
+  const capMult = 1 + .07*on('aiNotes') + .06*on('adminSupport') + [0,.04,.08][s.telehealth] - .05*on('protect');
+  const Hc = fte * [22.5,25,27.5,30][s.target] * 4.33 * capMult * (1 - t*.25) + 55 * s.ta;
+  // 4 delivery
+  let cancel = .12 - .03*on('sms') - .03*on('backfill') - .01*on('rebook');
+  if (s.cancelPolicy) cancel *= .45;
+  const gaps = .08 - .04*on('cluster') - [0,.01,.02][s.telehealth];
+  const eff = (1 - cancel) * (1 - gaps);
+  const Hs = Hc * eff;
+  const overflow = s.contractors ? Math.min(60, Math.max(0, Hd - Hs)) : 0;
+  const delivered = Math.min(Hd, Hs) + overflow;
+  const unmet = Math.max(0, Hd - delivered);
+  const idle = Math.max(0, Hs - Hd);
+  // 5 yield
+  const rate = b.rate * [.98,1,1.02,1.04][s.fees] * (1 + .05*on('groups') + .05*on('assess'));
+  const y = .86 + .06*on('nf2f') + .03*on('travel');
+  // 6 cash
+  const writeoff = Math.max(.008, .045 - .015*on('claims') - .01*on('budget') - .005*on('dd') - .005*on('chase') - [0,.003,.006][s.invoice]);
+  const dd = Math.max(7, [45,30,20][s.invoice] - 5*on('dd') - 6*on('chase'));
+  const revenue = delivered * rate * y * (1 - writeoff);
+  // costs
+  let levers = 0;
+  for (const k in DEFAULTS) levers += ctlCost(k, s, b);
+  const costs = b.fte * b.wage/12 + 5500 + 5000 + 600*b.fte + t * fte * 14000/12 + overflow * rate * y * .65 + levers;
+  const profit = revenue - costs;
+  return {D, c, cap, wanted, N, L, Hd, t, fte, Hc, eff, Hs, overflow, delivered, unmet, idle,
+    wait: unmet / HOURS_PER_CLIENT, rate, y, perHour: rate * y, writeoff, dd, revenue, costs, profit,
+    margin: revenue > 0 ? profit / revenue : 0, debtors: revenue * dd / 30};
+}
+
+function diagnose(m, b){
+  const st = {leads:'green', intake:'green', capacity:'green', delivery:'green', yield:'green', cash:'green', people:'green'};
+  if (m.eff < .85) st.delivery = 'amber';
+  if (m.y < .92) st.yield = 'amber';
+  if (m.dd > 30 || m.writeoff > .03) st.cash = 'amber';
+  if (m.t > .2 || m.L < 9.9) st.people = 'amber';
+  if (m.c < .5 || m.wanted > m.cap + .01) st.intake = 'amber';
+  const r = Math.round;
+  let stage, head, why;
+  if (m.unmet > .5){
+    if (m.eff < .85){
+      stage = 'delivery'; head = 'Paid hours are leaking out';
+      why = `${r(m.Hc - m.Hs)} rostered hours a month vanish into cancellations and dead gaps. ${r(m.wait)} clients are waiting. Plug the leaks before you hire.`;
+    } else if (m.t >= .3){
+      stage = 'people'; head = 'Clinicians keep quitting';
+      why = `Staff turnover of ${r(m.t*100)}% leaves chairs empty for months. ${r(m.wait)} clients are waiting. Fix why people leave.`;
+    } else {
+      stage = 'capacity'; head = 'The diary is full';
+      why = `${r(m.wait)} clients are waiting for a spot. More marketing only grows the list. Add clinician hours.`;
+    }
+  } else {
+    const idle = r(m.idle);
+    if (m.wanted > m.cap + .01){
+      stage = 'intake'; head = 'Enquiries stall at the front desk';
+      why = `About ${r(m.wanted - m.cap)} would-be clients a month never get onboarded, while ${idle} paid hours sit empty. Add intake hours.`;
+    } else {
+      const rD = m.D / ((b.enq + 40) * 1.32), rC = m.c / .70, rL = m.L / 11.07;
+      const lo = Math.min(rD, rC, rL);
+      if (lo === rD){
+        stage = 'leads'; head = 'Not enough enquiries';
+        why = `Clinicians have ${idle} paid hours a month with nobody in them. Pull the lead levers.`;
+      } else if (lo === rC){
+        stage = 'intake'; head = 'Enquiries are not converting';
+        why = `Only ${r(m.c*100)}% of enquiries become clients and ${idle} paid hours a month sit empty. Get faster and easier to say yes to.`;
+      } else {
+        stage = 'people'; head = 'Clients leave too soon';
+        why = `The average client stays ${m.L.toFixed(1)} months, so the diary never fills. ${idle} paid hours a month sit empty.`;
+      }
+    }
+  }
+  st[stage] = 'red';
+  return {st, stage, head, why};
+}
+/*END MODEL*/
+
+const STAGES = [
+  {id:'leads', name:'Leads', tag:'Get more enquiries'},
+  {id:'intake', name:'Intake', tag:'Turn enquiries into booked clients'},
+  {id:'capacity', name:'Capacity', tag:'Have enough clinician hours'},
+  {id:'delivery', name:'Delivery', tag:'Deliver the hours you pay for'},
+  {id:'yield', name:'Yield', tag:'Earn more from every hour'},
+  {id:'cash', name:'Cash', tag:'Get paid fast and in full'},
+  {id:'people', name:'Retention', tag:'Keep clients and clinicians'}
+];
+const L = (id, stage, name, desc, pos, fx) => ({id, stage, type:'lever', name, desc, pos, fx});
+const S = (id, stage, name, desc, fx, costLabel) => ({id, stage, type:'switch', name, desc, fx, costLabel});
+const CTLS = [
+  L('ads','leads','Paid ads','Google and Meta ads. Each extra dollar buys a little less.',['Off','$1.5k','$4k','$8k'],['No ads','+7 enquiries','+15 enquiries','+24 enquiries']),
+  L('referrers','leads','Referrer visits','Face time with GPs, paediatricians, support coordinators and schools.',['None','2 a month','6 a month','12 a month'],['No visits','+4 enquiries','+10 enquiries','+16 enquiries']),
+  S('reviews','leads','Ask for reviews','Every happy client gets a Google review link.','+10% enquiries'),
+  S('seo','leads','Local SEO','Google profile, suburb pages, answers to what families search for.','+12% enquiries'),
+  S('niche','leads','Pick a niche','Be known for one thing. Referrers remember specialists.','+10% enquiries, +4 pts conversion'),
+
+  L('speed','intake','Speed to first call','How fast a new enquiry gets a human on the phone.',['3+ days','Next day','Same hour'],['Slow','+8 pts conversion','+15 pts conversion']),
+  L('intakeHours','intake','Intake admin hours','How many new clients the front desk can onboard each month.',['12 a month','20 a month','32 a month'],['Onboard up to 12','Onboard up to 20','Onboard up to 32']),
+  S('online','intake','Online booking and forms','Clients book and fill in intake forms without waiting for a call back.','+5 pts conversion, +5 onboards'),
+  S('agreement','intake','Agreement in 48 hours','Template service agreement, e-signed before interest goes cold.','+4 pts conversion'),
+
+  L('hire','capacity','Hire clinicians','Each one adds about 100 rostered billable hours a month. You pay wage, kit and recruiting.',['+0','+1','+2','+3'],['No hires','+1 FTE','+2 FTE','+3 FTE']),
+  L('ta','capacity','Therapy assistants','Assistants run programs the clinician designs, at a lower rate.',['None','1','2'],['None','+55 clinician-equivalent hours','+110 clinician-equivalent hours']),
+  L('target','capacity','Billable target','Hours a day each clinician is asked to bill. Push too hard and people quit.',['4.5 h','5 h','5.5 h','6 h'],['-10% hours, turnover -3 pts','Standard','+10% hours, turnover +5 pts','+20% hours, turnover +14 pts']),
+  S('contractors','capacity','Overflow contractors','Contractors take up to 60 hours of excess demand a month.','+60 h when full','They keep 65%'),
+
+  S('cancelPolicy','delivery','Enforce cancellation fees','Charge short-notice cancellations as your agreement allows. A few clients walk.','Cancellation loss cut by half','Free, -3% client stay'),
+  S('sms','delivery','SMS reminders','Texts 48 hours and 2 hours before each session.','-3 pts cancellations'),
+  S('backfill','delivery','Short-notice list','Fill cancelled slots the same day from clients who want in sooner.','-3 pts cancellations'),
+  S('cluster','delivery','Zone scheduling','Group visits by suburb and day. Less driving, fewer dead gaps.','Dead gaps cut by half'),
+  S('aiNotes','delivery','AI notes and templates','Notes and reports written faster. Frees about 2 hours a week each.','+7% capacity'),
+  S('adminSupport','delivery','Admin off clinicians','Admin books, chases forms and invoices so clinicians do not.','+6% capacity'),
+  L('telehealth','delivery','Telehealth share','Sessions by video. No travel, more sessions in a day.',['0%','20%','40%'],['All in person','+4% capacity','+8% capacity']),
+
+  S('nf2f','yield','Bill non-face-to-face','Reports, calls and emails billed as the agreement allows.','+6 pts of rate banked'),
+  S('travel','yield','Bill travel properly','Charge travel time within the rules. Stop absorbing it.','+3 pts of rate banked'),
+  L('fees','yield','Private fees','Moves private fees only. Funded rates stay at the cap. Assumes 40% private work.',['-5%','Market','+5%','+10%'],['Rate -2%, +2 pts conversion','Standard','Rate +2%, -2 pts conversion','Rate +4%, -5 pts conversion']),
+  S('groups','yield','Group programs','One clinician, four clients. More revenue per clinician hour.','+5% revenue per hour'),
+  S('assess','yield','High-value assessments','Functional capacity, home mods, driving, assistive tech.','+5% revenue per hour'),
+
+  L('invoice','cash','Invoice timing','How soon after the session the invoice goes out.',['Monthly','Weekly','Same day'],['45 debtor days','30 debtor days','20 debtor days']),
+  S('claims','cash','Check claims first','Catch wrong line items and expired plans before you send.','-1.5 pts write-offs'),
+  S('budget','cash','Track plan budgets','Warn families before funding runs dry.','-1 pt write-offs, +5% client stay'),
+  S('dd','cash','Card on file','Private clients pay by card or direct debit on the day.','-5 debtor days'),
+  S('chase','cash','Friday debtor chase','Every overdue invoice gets a call or email, every week.','-6 debtor days'),
+
+  S('goal','people','12-week goal reviews','Clients see progress on paper. They stay when they can see it working.','+12% client stay'),
+  S('rebook','people','Rebook before they leave','Next session locked in at the end of each one.','+6% client stay'),
+  L('supervision','people','Supervision and CPD','Clinicians who feel backed and growing stay longer.',['Bare minimum','Monthly','Fortnightly + CPD'],['Turnover as is','Turnover -6 pts','Turnover -11 pts']),
+  S('ladder','people','Career ladder','Clear pay bands and steps up.','Turnover -5 pts','+3% wages'),
+  S('protect','people','Protected admin time','Half a day a week with no clients. Less burnout, fewer billable hours.','Turnover -4 pts','Costs 5% of hours')
+];
+CTLS.forEach((c, i) => c.no = String(i + 1).padStart(2, '0'));
+const byId = Object.fromEntries(CTLS.map(c => [c.id, c]));
+const SWING = 30;
+const $ = id => document.getElementById(id);
+const money = n => (n < -.5 ? '-' : '') + '$' + Math.round(Math.abs(n)).toLocaleString('en-AU');
+const signed = n => (n >= .5 ? '+' : '') + money(n);
+
+let state = {...DEFAULTS}, B = {...BASE0}, sound = false, lastProfit = null, actx = null;
+const nodes = {};
+
+function save(){ try { localStorage.setItem('lever-frame-v1', JSON.stringify({s:state, b:B})); } catch (e) {} }
+function load(d){
+  let src = d && d.s ? d : null;
+  if (!src){ try { src = JSON.parse(localStorage.getItem('lever-frame-v1') || 'null'); } catch (e) { src = null; } }
+  if (!src) return;
+  for (const k in DEFAULTS){
+    const v = src.s && src.s[k], c = byId[k];
+    if (c.type === 'switch' && typeof v === 'boolean') state[k] = v;
+    if (c.type === 'lever' && Number.isInteger(v) && v >= 0 && v < c.pos.length) state[k] = v;
+  }
+  for (const k in BASE0){ const v = src.b && +src.b[k]; if (Number.isFinite(v) && v > 0 || (k === 'enq' && v === 0)) B[k] = v; }
+}
+
+function clunk(){
+  try { if (navigator.vibrate) navigator.vibrate(8); } catch (e) {}
+  if (!sound) return;
+  try {
+    actx = actx || new (window.AudioContext || window.webkitAudioContext)();
+    const t = actx.currentTime, o = actx.createOscillator(), g = actx.createGain();
+    o.type = 'square'; o.frequency.setValueAtTime(150, t); o.frequency.exponentialRampToValueAtTime(48, t + .07);
+    g.gain.setValueAtTime(.14, t); g.gain.exponentialRampToValueAtTime(.001, t + .1);
+    o.connect(g); g.connect(actx.destination); o.start(t); o.stop(t + .11);
+  } catch (e) {}
+}
+
+function costLabel(c, val){
+  if (c.costLabel) return c.costLabel;
+  const n = ctlCost(c.id, {...state, [c.id]: val}, B);
+  return n > 0 ? money(n) + ' / mo' : 'Free';
+}
+
+function build(){
+  const rail = $('rail'), banks = $('banks');
+  STAGES.forEach((st, si) => {
+    const row = document.createElement('button');
+    row.type = 'button'; row.className = 'rail-row';
+    row.innerHTML = `<i class="lamp"></i><span class="plate">${si + 1}</span><span class="rail-name">${st.name}<span class="rail-tag"></span></span><span class="rail-metric"></span>`;
+    row.addEventListener('click', () => $('bank-' + st.id).scrollIntoView({behavior:'smooth', block:'start'}));
+    rail.appendChild(row);
+    const sec = document.createElement('section');
+    sec.className = 'panel bank'; sec.id = 'bank-' + st.id; sec.dataset.stage = st.id;
+    sec.innerHTML = `<header class="bank-head"><span class="bank-num">${si + 1}</span><div class="bank-title"><h2>${st.name}</h2><p>${st.tag}</p></div><div class="bank-stat"><i class="lamp"></i><span class="bank-metric"></span></div></header><div class="ctls"></div>`;
+    const box = sec.querySelector('.ctls');
+    CTLS.filter(c => c.stage === st.id).sort((a, b) => (a.type === 'lever' ? 0 : 1) - (b.type === 'lever' ? 0 : 1)).forEach(c => box.appendChild(c.type === 'lever' ? buildLever(c) : buildSwitch(c)));
+    banks.appendChild(sec);
+    nodes[st.id] = {row, lamp: row.querySelector('.lamp'), tag: row.querySelector('.rail-tag'), metric: row.querySelector('.rail-metric'),
+      bLamp: sec.querySelector('.bank-stat .lamp'), bMetric: sec.querySelector('.bank-metric')};
+  });
+  const note = document.createElement('p');
+  note.className = 'rail-note';
+  note.textContent = 'Red is where work piles up. Amber stages leak money from every hour that gets through.';
+  rail.appendChild(note);
+}
+
+function buildLever(c){
+  const el = document.createElement('div');
+  el.className = 'ctl lever'; el.id = 'c-' + c.id;
+  const n = c.pos.length;
+  const ticks = c.pos.map((_, i) => `<span class="lv-tick" style="--a:${-SWING + i * 2 * SWING / (n - 1)}deg"></span>`).join('');
+  el.innerHTML = `<div class="lv" role="slider" tabindex="0" aria-label="${c.name}" aria-valuemin="0" aria-valuemax="${n - 1}"><span class="lv-quad"></span>${ticks}<span class="lv-arm"><span class="lv-grip"></span></span><span class="lv-pivot"></span></div>
+  <div class="ctl-body"><div class="ctl-head"><span class="plate">${c.no}</span><h3 class="ctl-name">${c.name}</h3></div><p class="ctl-desc">${c.desc}</p>
+  <div class="pos-row">${c.pos.map((p, i) => `<button type="button" class="pos" data-i="${i}">${p}</button>`).join('')}</div>
+  <p class="ctl-fx"><span class="fx"></span><span class="cost"></span></p></div>`;
+  const lv = el.querySelector('.lv');
+  let drag = null;
+  lv.addEventListener('pointerdown', e => { drag = {x: e.clientX, moved: false}; try { lv.setPointerCapture(e.pointerId); } catch (err) {} });
+  lv.addEventListener('pointermove', e => {
+    if (!drag) return;
+    if (!drag.moved && Math.abs(e.clientX - drag.x) < 6) return;
+    drag.moved = true; lv.classList.add('dragging');
+    const r = lv.getBoundingClientRect();
+    const ang = Math.atan2(e.clientX - (r.left + r.width / 2), Math.max(12, r.bottom - 14 - e.clientY)) * 180 / Math.PI;
+    const i = clamp(Math.round((ang + SWING) / (2 * SWING) * (n - 1)), 0, n - 1);
+    if (i !== state[c.id]) set(c.id, i);
+  });
+  lv.addEventListener('pointerup', () => { if (!drag) return; const tap = !drag.moved; drag = null; lv.classList.remove('dragging'); if (tap) set(c.id, (state[c.id] + 1) % n); });
+  lv.addEventListener('pointercancel', () => { drag = null; lv.classList.remove('dragging'); });
+  lv.addEventListener('keydown', e => {
+    const k = e.key; let i = state[c.id];
+    if (k === 'ArrowRight' || k === 'ArrowUp') i = Math.min(n - 1, i + 1);
+    else if (k === 'ArrowLeft' || k === 'ArrowDown') i = Math.max(0, i - 1);
+    else if (k === 'Home') i = 0; else if (k === 'End') i = n - 1;
+    else if (k === 'Enter' || k === ' ') i = (i + 1) % n; else return;
+    e.preventDefault(); if (i !== state[c.id]) set(c.id, i);
+  });
+  el.querySelectorAll('.pos').forEach(b => b.addEventListener('click', () => { const i = +b.dataset.i; if (i !== state[c.id]) set(c.id, i); }));
+  c.el = el; return el;
+}
+
+function buildSwitch(c){
+  const el = document.createElement('button');
+  el.type = 'button'; el.className = 'ctl switch'; el.id = 'c-' + c.id; el.setAttribute('role', 'switch');
+  el.innerHTML = `<span class="sw"><span class="sw-lamp"></span><span class="sw-nut"></span><span class="sw-bat"></span></span>
+  <span class="ctl-body"><span class="ctl-head"><span class="plate">${c.no}</span><span class="ctl-name">${c.name}</span><span class="sw-state">OFF</span></span><span class="ctl-desc">${c.desc}</span>
+  <span class="ctl-fx"><span class="fx">${c.fx}</span><span class="cost"></span></span></span>`;
+  el.addEventListener('click', () => set(c.id, !state[c.id]));
+  c.el = el; return el;
+}
+
+function set(id, val){
+  state[id] = val; clunk(); update(id); save();
+}
+
+function tween(el, to, fmt){
+  const from = el._v == null ? to : el._v; el._v = to;
+  if (from === to || matchMedia('(prefers-reduced-motion: reduce)').matches){ el.textContent = fmt(to); return; }
+  const t0 = performance.now(); cancelAnimationFrame(el._raf);
+  const step = now => { const p = Math.min(1, (now - t0) / 320), e = 1 - Math.pow(1 - p, 3); el.textContent = fmt(from + (to - from) * e); if (p < 1) el._raf = requestAnimationFrame(step); };
+  el._raf = requestAnimationFrame(step);
+}
+
+function suggestions(profit){
+  const out = [];
+  for (const c of CTLS){
+    if (c.type === 'lever'){
+      let best = null;
+      for (const d of [1, -1]){
+        const i = state[c.id] + d; if (i < 0 || i >= c.pos.length) continue;
+        const g = compute({...state, [c.id]: i}, B).profit - profit;
+        if (!best || g > best.gain) best = {c, label: 'Move to ' + c.pos[i], gain: g};
+      }
+      if (best) out.push(best);
+    } else {
+      const v = !state[c.id];
+      out.push({c, label: v ? 'Switch on' : 'Switch off', gain: compute({...state, [c.id]: v}, B).profit - profit});
+    }
+  }
+  return out.filter(x => x.gain > 25).sort((a, b) => b.gain - a.gain).slice(0, 3);
+}
+
+function update(pulled){
+  const m = compute(state, B), dg = diagnose(m, B), r = Math.round;
+  // controls
+  for (const c of CTLS){
+    const v = state[c.id];
+    if (c.type === 'lever'){
+      const lv = c.el.querySelector('.lv'), n = c.pos.length;
+      lv.querySelector('.lv-arm').style.setProperty('--a', (-SWING + v * 2 * SWING / (n - 1)) + 'deg');
+      lv.setAttribute('aria-valuenow', v); lv.setAttribute('aria-valuetext', c.pos[v]);
+      c.el.querySelectorAll('.pos').forEach((b, i) => b.setAttribute('aria-pressed', i === v));
+      c.el.querySelector('.fx').textContent = c.fx[v];
+      c.el.querySelector('.cost').textContent = costLabel(c, v);
+    } else {
+      c.el.setAttribute('aria-checked', v);
+      c.el.querySelector('.sw-state').textContent = v ? 'ON' : 'OFF';
+      c.el.querySelector('.cost').textContent = costLabel(c, true);
+    }
+  }
+  // stages
+  const metric = {
+    leads: `${r(m.D)} enquiries / mo`, intake: `${r(m.c * 100)}% convert, ${m.N.toFixed(1)} start`,
+    capacity: `${r(m.Hc)} h rostered`, delivery: `${r(m.eff * 100)}% delivered`,
+    yield: `$${r(m.perHour)} banked / h`, cash: `${r(m.dd)} debtor days`,
+    people: `${m.L.toFixed(1)} mo stay, ${r(m.t * 100)}% quit`
+  };
+  for (const st of STAGES){
+    const nd = nodes[st.id], s = dg.st[st.id];
+    nd.lamp.dataset.s = nd.bLamp.dataset.s = nd.row.dataset.s = s;
+    nd.tag.textContent = s === 'red' ? 'Stuck here' : s === 'amber' ? 'Leaking' : '';
+    nd.metric.textContent = nd.bMetric.textContent = metric[st.id];
+    nd.row.setAttribute('aria-label', `${st.name}: ${metric[st.id]}${s === 'red' ? ', bottleneck' : s === 'amber' ? ', leaking' : ''}. Go to levers.`);
+  }
+  // diagnosis
+  $('r-stuck').textContent = STAGES.find(s => s.id === dg.stage).name;
+  $('d-head').textContent = dg.head; $('d-why').textContent = dg.why;
+  const top = Math.max(m.Hd, m.Hs + m.overflow, 1);
+  $('bal-d').style.width = (m.Hd / top * 100) + '%'; $('bal-s').style.width = ((m.Hs + m.overflow) / top * 100) + '%';
+  $('bal-dn').textContent = r(m.Hd).toLocaleString('en-AU') + ' h / mo'; $('bal-sn').textContent = r(m.Hs + m.overflow).toLocaleString('en-AU') + ' h / mo';
+  // readouts
+  const pEl = $('r-profit'); pEl.classList.toggle('neg', m.profit < 0); tween(pEl, m.profit, money);
+  const yEl = $('t-year'); yEl.classList.toggle('neg', m.profit < 0); tween(yEl, m.profit * 12, money);
+  tween($('t-rev'), m.revenue, money);
+  const mEl = $('t-margin'); mEl.classList.toggle('neg', m.margin < 0); tween(mEl, m.margin * 100, v => v.toFixed(1) + '%');
+  tween($('t-wait'), m.wait, v => String(r(v))); tween($('t-idle'), m.idle, v => r(v) + ' h'); tween($('t-debt'), m.debtors, money);
+  const start = compute(DEFAULTS, B).profit;
+  $('r-vs').textContent = signed(m.profit - start) + ' vs start';
+  // last pull
+  if (pulled && lastProfit != null){
+    const c = byId[pulled], d = m.profit - lastProfit;
+    const what = c.type === 'lever' ? c.pos[state[pulled]] : (state[pulled] ? 'on' : 'off');
+    let msg = `<b>${c.name}: ${what}.</b> Profit ${signed(d)} a month.`;
+    if (d < 25 && c.stage !== dg.stage && (c.type === 'switch' ? state[pulled] : state[pulled] > DEFAULTS[pulled])) msg += ` The clinic is stuck at ${STAGES.find(s => s.id === dg.stage).name.toLowerCase()}, so that barely helps.`;
+    $('r-last').innerHTML = msg;
+  }
+  lastProfit = m.profit;
+  // suggestions
+  const box = $('next'); box.textContent = '';
+  const sug = suggestions(m.profit);
+  if (!sug.length){
+    const p = document.createElement('p'); p.className = 'next-empty';
+    p.textContent = 'No single pull adds profit from here. Try two together, like hiring and marketing.';
+    box.appendChild(p);
+  }
+  for (const x of sug){
+    const b = document.createElement('button');
+    b.type = 'button'; b.className = 'next-item';
+    b.innerHTML = `<span class="plate">${x.c.no}</span><span class="what">${x.c.name}<small>${x.label}</small></span><span class="gain">${signed(x.gain)} / mo</span>`;
+    b.addEventListener('click', () => {
+      x.c.el.scrollIntoView({behavior:'smooth', block:'center'});
+      x.c.el.classList.remove('flash'); void x.c.el.offsetWidth; x.c.el.classList.add('flash');
+    });
+    box.appendChild(b);
+  }
+}
+
+function bindBase(){
+  for (const k in BASE0){
+    const inp = $('b-' + k); inp.value = B[k];
+    inp.addEventListener('input', () => {
+      const v = parseFloat(inp.value);
+      if (!Number.isFinite(v)) return;
+      B[k] = clamp(v, +inp.min, +inp.max); lastProfit = null; update(); save();
+    });
+  }
+}
+
+function start(d){
+  load(d); build(); bindBase(); update();
+  $('b-reset').addEventListener('click', () => { state = {...DEFAULTS}; lastProfit = null; clunk(); update(); $('r-last').textContent = 'All levers back to the start.'; save(); });
+  $('b-sound').addEventListener('click', e => { sound = !sound; e.currentTarget.setAttribute('aria-pressed', sound); clunk(); });
+  window.claude?.hot?.snapshot?.(() => ({s: state, b: B}));
+}
+window.claude?.hot?.ready ? window.claude.hot.ready(start) : start(window.claude?.hot?.data ?? {});
+})();
+</script>
+
+</body></html>
